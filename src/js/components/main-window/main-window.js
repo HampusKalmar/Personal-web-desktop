@@ -5,6 +5,18 @@ template.innerHTML = `
   <style>
     #window-container {
       background-color: #edf2f4;
+      width: 600px;
+      height: 600px;
+    }
+
+    .pop-up-window {
+      width: 50px;
+      height: 50px;
+    }
+
+    .frame {
+      width: 600px;
+      background-color: #2b2d42;
     }
 
   </style>
@@ -16,6 +28,7 @@ customElements.define('main-window',
   class extends HTMLElement {
     #mainWindow
 
+    
     /**
      * A constructor that instantiates the private members.
      */
@@ -44,34 +57,34 @@ customElements.define('main-window',
       frame.classList.add('frame')
       popUpWindow.appendChild(frame)
 
-      const content = document.createElement('div')
-      content.textContent = 'Window'
-      popUpWindow.appendChild(content)
-
-      const minimizeButton = document.createElement('button')
-      minimizeButton.innerHTML = '<span>&#8211;</span>'
-      minimizeButton.classList.add('minimize-button')
-      minimizeButton.addEventListener('click', () => {
-        frame.classList.toggle('minimized')
-      })
-      frame.appendChild(minimizeButton)
-
-      const expandButton = document.createElement('button')
-      expandButton.innerHTML = '<span>&#9635;</span>'
-      expandButton.classList.add('expand-button')
-      expandButton.addEventListener('click', () => {
-        frame.classList.toggle('expanded')
-      })
-      frame.appendChild(expandButton)
-
       const closeButton = document.createElement('button')
       closeButton.innerHTML = '<span>&times;</span>'
       closeButton.classList.add('close-button')
-      closeButton.addEventListener('click', () => {
-        this.#mainWindow.removeChild(popUpWindow)
+      closeButton.addEventListener('click', (event) => {
+        event.preventDefault()
+        popUpWindow.remove()
+        this.#mainWindow.remove()
       })
       frame.appendChild(closeButton)
 
+      const duplicateButton = document.createElement('button')
+      duplicateButton.textContent = 'Duplicate'
+      duplicateButton.classList.add('duplicate-button')
+      duplicateButton.addEventListener('click', () => {
+        this.#duplicatePopUpWindow(popUpWindow)
+      })
+      frame.appendChild(duplicateButton)
+
       this.#mainWindow.appendChild(popUpWindow)
+    }
+
+    /**
+     * A method that duplicates the pop up window.
+     *
+     * @param popUpWindow
+     */
+    async #duplicatePopUpWindow (popUpWindow) {
+      const duplicatedPopUpWindow = popUpWindow.cloneNode(true)
+      this.#mainWindow.appendChild(duplicatedPopUpWindow)
     }
   })
