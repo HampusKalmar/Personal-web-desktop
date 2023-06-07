@@ -7,6 +7,7 @@ template.innerHTML = `
       background-color: #edf2f4;
       width: 600px;
       height: 600px;
+      box-shadow: 1px 3px 10px 2px;
     }
 
     .pop-up-window {
@@ -27,8 +28,6 @@ customElements.define('main-window',
  */
   class extends HTMLElement {
     #mainWindow
-
-    
     /**
      * A constructor that instantiates the private members.
      */
@@ -37,6 +36,30 @@ customElements.define('main-window',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#mainWindow = this.shadowRoot.querySelector('#window-container')
+
+      let isDragging = false
+      let offsetX = 0
+      let offsetY = 0
+      let popUpWindow
+
+      this.#mainWindow.addEventListener('mousedown', (event) => {
+        isDragging = true
+        popUpWindow = event.currentTarget
+        offsetX = event.clientX - popUpWindow.offsetLeft
+        offsetY = event.clientY - popUpWindow.offsetTop
+      })
+      document.addEventListener('mousemove', (event) => {
+        if (isDragging) {
+          const x = event.clientX - offsetX
+          const y = event.clientY - offsetY
+          popUpWindow.style.left = `${x}px`
+          popUpWindow.style.top = `${y}px`
+        }
+      })
+      document.addEventListener('mouseup', () => {
+        isDragging = false
+        popUpWindow = null
+      })
     }
 
     /**
