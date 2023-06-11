@@ -1,4 +1,4 @@
-const URL = 'https://courselab.lnu.se/message-app/socket'
+const URL = 'wws://courselab.lnu.se/message-app/socket'
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -53,16 +53,11 @@ customElements.define('message-application',
      */
     async fetchMessages () {
       try {
-        const res = await window.fetch(URL, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.apiKey}`
-          }
+        const res = await fetch(URL, {
+          method: 'GET'
         })
         if (res.status === 200) {
-          const messages = await res.json()
-          this.displayMessages(messages)
+          return res.json()
         } else {
           throw new Error('Error')
         }
@@ -78,8 +73,8 @@ customElements.define('message-application',
       const message = {
         type: 'message',
         data: this.#messageInput.value,
-        username: 'MyFancyUsername',
-        channel: 'my, not so secret, channel',
+        username: 'Hampus',
+        channel: 'Hampus channel',
         key: this.apiKey
       }
       const requestOptions = {
