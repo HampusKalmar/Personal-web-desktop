@@ -41,12 +41,12 @@ customElements.define('main-window',
     }
 
     /**
-     * A method that creates pop up windows.
+     * Creates a close button and attaches an event listener to it.
+     *
+     * @param {HTMLElement} popUpWindow - The pop-up window element to attach the button to.
+     * @returns {HTMLElement} closeButton - The created close button element.
      */
-    async createPopUpWindow () {
-      const popUpWindow = document.createElement('div')
-      popUpWindow.classList.add('pop-up-window')
-
+    createCloseButton (popUpWindow) {
       const closeButton = document.createElement('button')
       closeButton.innerHTML = '<span>&times;</span>'
       closeButton.classList.add('close-button')
@@ -55,8 +55,16 @@ customElements.define('main-window',
         event.stopPropagation()
         popUpWindow.remove()
       })
-      popUpWindow.appendChild(closeButton)
+      return closeButton
+    }
 
+    /**
+     * Creates a duplicate button and attaches an event listener to it.
+     *
+     * @param {HTMLElement} popUpWindow - The pop-up window element to attach the button to.
+     * @returns {HTMLElement} duplicateButton - The created duplicate button element.
+     */
+    createDuplicateButton (popUpWindow) {
       const duplicateButton = document.createElement('button')
       duplicateButton.textContent = 'Duplicate'
       duplicateButton.classList.add('duplicate-button')
@@ -64,6 +72,20 @@ customElements.define('main-window',
         event.stopPropagation()
         this.#duplicatePopUpWindow(popUpWindow)
       })
+      return duplicateButton
+    }
+
+    /**
+     * A method that creates pop up windows.
+     */
+    async createPopUpWindow () {
+      const popUpWindow = document.createElement('div')
+      popUpWindow.classList.add('pop-up-window')
+
+      const closeButton = this.createCloseButton(popUpWindow)
+      popUpWindow.appendChild(closeButton)
+
+      const duplicateButton = this.createDuplicateButton(popUpWindow)
       popUpWindow.appendChild(duplicateButton)
 
       this.#mainWindow.appendChild(popUpWindow)
@@ -76,7 +98,14 @@ customElements.define('main-window',
      * @param {HTMLElement} popUpWindow - The Pop-up window element do duplicate.
      */
     async #duplicatePopUpWindow (popUpWindow) {
-      const duplicatedPopUpWindow = popUpWindow.cloneNode(true)
+      const duplicatedPopUpWindow = popUpWindow.cloneNode(false)
+
+      const closeButton = this.createCloseButton(duplicatedPopUpWindow)
+      duplicatedPopUpWindow.appendChild(closeButton)
+
+      const duplicateButton = this.createDuplicateButton(duplicatedPopUpWindow)
+
+      duplicatedPopUpWindow.appendChild(duplicateButton)
       this.#mainWindow.appendChild(duplicatedPopUpWindow)
       this.#addDragEventListeners(duplicatedPopUpWindow)
     }
