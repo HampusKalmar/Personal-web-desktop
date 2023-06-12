@@ -3,10 +3,57 @@ const URL = 'wss://courselab.lnu.se/message-app/socket'
 const template = document.createElement('template')
 template.innerHTML = `
   <div id="message-app">
+    <input type="text" id="username-input" placeholder="Enter username"/>
+    <button id="username-button">Enter Username</button>
     <input type="text" id="message-input" placeholder="Type your message"/>
     <button id="send-button">Send</button>
     <ul id="message-list"></ul>
-</div>
+    <p id="error-message"></p>
+  </div>
+
+  <style>
+    #message-app {
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 20px;
+      width: 200px;
+      height: 400px;
+      overflow: auto; 
+    }
+
+    #message-list {
+      list-style-type: none;
+      padding: 10px;
+      margin: 0;
+      height: 70%;
+      overflow: auto;
+    }
+
+    #message-input {
+      width: 96%;
+      margin-top: 10px;
+    }
+
+    #send-button {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #username-button {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #username-input {
+      width: 96%;
+      margin-top: 10px;
+    }
+
+    #error-message {
+      color: red;
+      display: none;
+    }
+  </style>
 `
 
 customElements.define('message-application',
@@ -21,6 +68,12 @@ customElements.define('message-application',
     #messageList
 
     #sendButton
+
+    #errorMessage
+
+    #usernameButton
+
+    #usernameInput
 
     socket
 
@@ -41,6 +94,10 @@ customElements.define('message-application',
       this.#messageApp = this.shadowRoot.querySelector('#message-app')
       this.#sendButton = this.shadowRoot.querySelector('#send-button')
       this.#messageList = this.shadowRoot.querySelector('#message-list')
+      this.#messageInput = this.shadowRoot.querySelector('#message-input')
+      this.#usernameButton = this.shadowRoot.querySelector('#username-button')
+      this.#usernameInput = this.shadowRoot.querySelector('#username-input')
+      this.#errorMessage = this.shadowRoot.querySelector('#error-message')
     }
 
     /**
@@ -94,34 +151,34 @@ customElements.define('message-application',
      * Initializes the chat application.
      */
     initChatApp () {
-      this.#messageInput = document.createElement('textarea')
-      this.#messageInput.id = 'message-input'
-      this.#messageInput.placeholder = 'Type your message'
-      this.#messageApp.replaceChild(this.#messageInput, this.shadowRoot.querySelector('#message-input'))
-
-      this.username = localStorage.getItem('username')
-      if (!this.username) {
-        this.username = prompt('Please enter your username')
-        localStorage.setItem('username', this.username)
-      }
-
-      this.socket = new WebSocket(URL)
-      this.#sendButton.addEventListener('click', () => this.sendMessage())
-
-      /**
-       * Parses the received messages and calls `displayMessages` to display them.
-       *
-       * @param {Event} event - The message event received from WebSocket.
-       */
-      this.socket.onmessage = (event) => {
-        const message = JSON.parse(event.data)
-        if (message.type !== 'heartbeat') {
-          this.messageQueue.unshift(message)
-          if (this.messageQueue.length > 20) {
-            this.messageQueue.pop()
-          }
-          this.displayMessages(this.messageQueue)
+      this.#usernameButton.addEventListener('click', () => {
+        this.username = this.#usernameInput.value
+        if (this.username) {
+          localStorage.setItem('username', this.username)
+          this.socket = new WebSocket(URL)
+          this.socket.onmessage = this.handleMessage.bind(this)
+          this.#sendButton.addEventListener('click', () => this.sendMessage())
+          this.#errorMessage.style.display = 'none' //  Fixa error-message senare. fungerar inte som tänkt !!!!
+        } else {
+          this.#errorMessage.textContent = 'Please enter your username'
+          this.#errorMessage.style.display = 'block'
         }
+      })
+    }
+
+    /**
+     * Handles a received message from the WebSocket.
+     *
+     * @param {Event} event - The message event received from the WebSocket.
+     */
+    handleMessage (event) {
+      const message = JSON.parse(event.data)
+      if (message.type !== 'heartbeat') {
+        this.messageQueue.unshift(message)
+        if (this.messageQueue.length > 20) {
+          this.messageQueue.pop()
+        }
+        this.displayMessages(this.messageQueue)
       }
     }
   })
