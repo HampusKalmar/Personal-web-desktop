@@ -2,7 +2,7 @@ import '../message-application/message-application.js'
 
 const template = document.createElement('template')
 template.innerHTML = `
-  <div id='window-container'>
+  <div id="window-container">
   </div>
   <style>
     .pop-up-window {
