@@ -2,6 +2,10 @@ const template = document.createElement('template')
 template.innerHTML = `
   <div id="ticTacToe-board"></div>
   <div id="status"></div>
+
+  <style>
+    
+  </style>
 `
 customElements.define('tic-tac-toe',
 /**
@@ -29,7 +33,7 @@ customElements.define('tic-tac-toe',
      * A lifecycle callback that is called when the element is inserted into the DOM.
      */
     connectedCallback () {
-
+      this.startGame()
     }
 
     /**
@@ -61,6 +65,27 @@ customElements.define('tic-tac-toe',
         setTimeout(() => this.startGame(), 2000)
       } else {
         this.#currentTurn = 'o'
+        this.computerMove()
+      }
+    }
+
+    /**
+     * The method that handles the computers move in the game.
+     */
+    computerMove () {
+      let cell
+      do {
+        const randomIndex = Math.floor(Math.random() * 9)
+        cell = this.#board.children[randomIndex]
+      } while (cell.textContent !== '')
+
+      cell.textContent = this.#currentTurn
+      cell.classList.add(this.#currentTurn)
+      if (this.checkWin(this.#currentTurn)) {
+        this.#status.textContent = 'You lose'
+        setTimeout(() => this.startGame(), 2000)
+      } else {
+        this.#currentTurn = 'x'
       }
     }
 
