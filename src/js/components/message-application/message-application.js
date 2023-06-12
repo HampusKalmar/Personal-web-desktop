@@ -1,4 +1,4 @@
-const URL = 'wws://courselab.lnu.se/message-app/socket'
+const URL = 'wss://courselab.lnu.se/message-app/socket'
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -18,13 +18,20 @@ customElements.define('message-application',
 
     #messageInput
 
-    #sendButton
-
     #messageList
 
+    #sendButton
+
+    socket
+
     apiKey
+
+    username
+
+    messageQueue = []
+
     /**
-     *
+     * Initializes properties, attaches shadow DOM, and sets up event listeners.
      */
     constructor () {
       super()
@@ -32,84 +39,89 @@ customElements.define('message-application',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#messageApp = this.shadowRoot.querySelector('#message-app')
-      this.#messageInput = this.shadowRoot.querySelector('#message-input')
       this.#sendButton = this.shadowRoot.querySelector('#send-button')
       this.#messageList = this.shadowRoot.querySelector('#message-list')
-
-      this.apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-
-      this.#sendButton.addEventListener('click', this.sendMessage())
     }
 
     /**
-     *
+     * A lifecycle callback that is called when the element is inserted into the DOM.
      */
     connectedCallback () {
-      this.fetchMessages()
+      this.initChatApp()
     }
 
     /**
-     *
-     */
-    async fetchMessages () {
-      try {
-        const res = await fetch(URL, {
-          method: 'GET'
-        })
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          throw new Error('Error')
-        }
-      } catch (err) {
-        console.error(err.message)
-      }
-    }
-
-    /**
-     *
+     * Sends a message via WebSocket.
      */
     async sendMessage () {
       const message = {
         type: 'message',
         data: this.#messageInput.value,
-        username: 'Hampus',
+        username: this.username,
         channel: 'Hampus channel',
-        key: this.apiKey
+        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${this.apiKey}`
-        },
-        body: JSON.stringify(message)
-      }
-
-      try {
-        const response = await fetch(URL, requestOptions)
-        if (response.status === 200) {
-          console.log('Message sent successfully')
-          this.#messageInput.value = ''
-        } else {
-          throw new Error('Error sending message')
+      if (this.socket.readyState === WebSocket.OPEN) {
+        this.socket.send(JSON.stringify(message))
+        this.messageQueue.unshift(message)
+        if (this.messageQueue.length > 20) {
+          this.messageQueue.pop()
         }
-      } catch (error) {
-        console.error(error.message)
+        this.displayMessages(this.messageQueue)
+        this.#messageInput.value = ''
+        console.log('Message sent successfully')
+      } else {
+        console.error('WebSocket is not open. Unable to send message.')
       }
     }
 
     /**
+     * Displays the received messages in the message list.
      *
-     * @param messages
+     * @param {Array} messages - An array of messages to display.
      */
     displayMessages (messages) {
       this.#messageList.innerHTML = ''
 
-      for (const message of messages) {
+      for (const message of messages.reverse()) {
         const listItem = document.createElement('li')
         listItem.textContent = `${message.username}: ${message.data}`
         this.#messageList.appendChild(listItem)
+      }
+    }
+
+    /**
+     * Initializes the chat application.
+     */
+    initChatApp () {
+      this.#messageInput = document.createElement('textarea')
+      this.#messageInput.id = 'message-input'
+      this.#messageInput.placeholder = 'Type your message'
+      this.#messageApp.replaceChild(this.#messageInput, this.shadowRoot.querySelector('#message-input'))
+
+      this.username = localStorage.getItem('username')
+      if (!this.username) {
+        this.username = prompt('Please enter your username')
+        localStorage.setItem('username', this.username)
+      }
+
+      this.socket = new WebSocket(URL)
+      this.#sendButton.addEventListener('click', () => this.sendMessage())
+
+      /**
+       * Parses the received messages and calls `displayMessages` to display them.
+       *
+       * @param {Event} event - The message event received from WebSocket.
+       */
+      this.socket.onmessage = (event) => {
+        const message = JSON.parse(event.data)
+        if (message.type !== 'heartbeat') {
+          this.messageQueue.unshift(message)
+          if (this.messageQueue.length > 20) {
+            this.messageQueue.pop()
+          }
+          this.displayMessages(this.messageQueue)
+        }
       }
     }
   })
