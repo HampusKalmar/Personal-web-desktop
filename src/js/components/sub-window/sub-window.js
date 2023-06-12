@@ -18,16 +18,13 @@ template.innerHTML = `
     }
   </style>
 `
-customElements.define('main-window',
+customElements.define('sub-window',
 /**
  *
  */
   class extends HTMLElement {
     #mainWindow
 
-    #messageApp
-
-    #ticTacToe
     /**
      * A constructor that instantiates the private members.
      */
@@ -36,13 +33,6 @@ customElements.define('main-window',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#mainWindow = this.shadowRoot.querySelector('#window-container')
-    }
-
-    /**
-     * A lifecycle callback that is called when the element is inserted into the DOM.
-     */
-    connectedCallback () {
-      this.createPopUpWindow()
     }
 
     /**
@@ -93,7 +83,7 @@ customElements.define('main-window',
       const closeButton = this.createCloseButton(popUpWindow)
       popUpWindow.appendChild(closeButton)
 
-      const duplicateButton = this.createDuplicateButton(popUpWindow)
+      const duplicateButton = this.createDuplicateButton(popUpWindow, appType)
       popUpWindow.appendChild(duplicateButton)
 
       if (appType === 'message') {

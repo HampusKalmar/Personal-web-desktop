@@ -1,3 +1,5 @@
+import '../sub-window/sub-window.js'
+
 const template = document.createElement('template')
 template.innerHTML = `
   <div id="dock-container">
@@ -65,6 +67,22 @@ customElements.define('dock-application',
       this.#items.forEach(item => {
         item.addEventListener('click', () => {
           console.log('The button was clicked on')
+          const subWindow = document.createElement('sub-window')
+          let appType
+
+          switch (item.textContent.trim()) {
+            case 'Chat':
+              appType = 'message'
+              break
+            case 'Tic Tac Toe':
+              appType = 'tic-tac-toe'
+              break
+            default:
+              console.log('Unknown dock item')
+              return
+          }
+          document.body.appendChild(subWindow)
+          subWindow.createPopUpWindow(appType)
         })
       })
     }
