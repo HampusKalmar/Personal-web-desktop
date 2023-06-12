@@ -1,6 +1,9 @@
 const template = document.createElement('template')
 template.innerHTML = `
   <div id="dock-container">
+    <button class="dock-item">Chat</button>
+    <button class="dock-item">Memory</button>
+    <button class="dock-item">Tic Tac Toe</button>
   </div>
 
   <style>
@@ -16,7 +19,12 @@ template.innerHTML = `
     }
 
     .dock-item {
-      margin: 0 10px;
+      margin: 0 100px;
+      color: #edf2f4;
+      background: transparent;
+      border: none;
+      font-family: fantasy;
+      font-size: 20px;
     }
 
   </style>
@@ -29,6 +37,8 @@ customElements.define('dock-application',
   class extends HTMLElement {
     #dock
 
+    #items
+
     /**
      * Initializes properties, attaches shadow DOM, and sets up event listeners.
      */
@@ -38,5 +48,24 @@ customElements.define('dock-application',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#dock = this.shadowRoot.querySelector('#dock-container')
+      this.#items = this.shadowRoot.querySelectorAll('.dock-item')
+    }
+
+    /**
+     * A lifecycle callback that is called when the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      this.clickDockItems()
+    }
+
+    /**
+     * Checks if the items is clicked on in the dock.
+     */
+    clickDockItems () {
+      this.#items.forEach(item => {
+        item.addEventListener('click', () => {
+          console.log('The button was clicked on')
+        })
+      })
     }
   })
