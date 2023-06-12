@@ -7,6 +7,14 @@ template.innerHTML = `
     <button id="username-button">Enter Username</button>
     <input type="text" id="message-input" placeholder="Type your message"/>
     <button id="send-button">Send</button>
+    <button id="emoji-button">🙂</button>
+    <div id="emoji-picker" style="display: none;">
+      <span class="emoji">😀</span>
+      <span class="emoji">😂</span>
+      <span class="emoji">😊</span>
+      <span class="emoji">😑</span>
+      <span class="emoji">😮</span>
+    </div>
     <ul id="message-list"></ul>
     <p id="error-message"></p>
   </div>
@@ -73,6 +81,12 @@ customElements.define('message-application',
 
     #usernameButton
 
+    #emojiButton
+
+    #emojiPicker
+
+    #emojis
+
     #usernameInput
 
     socket
@@ -98,6 +112,24 @@ customElements.define('message-application',
       this.#usernameButton = this.shadowRoot.querySelector('#username-button')
       this.#usernameInput = this.shadowRoot.querySelector('#username-input')
       this.#errorMessage = this.shadowRoot.querySelector('#error-message')
+      this.#emojiButton = this.shadowRoot.querySelector('#emoji-button')
+      this.#emojiPicker = this.shadowRoot.querySelector('#emoji-picker')
+      this.#emojis = this.shadowRoot.querySelectorAll('.emoji')
+
+      this.#emojiButton.addEventListener('click', () => {
+        this.#emojiPicker.style.display = this.#emojiPicker.style.display === 'none' ? 'block' : 'none'
+      })
+
+      this.#emojis.forEach((emoji) => {
+        emoji.addEventListener('click', () => {
+          this.#messageInput.value += emoji.textContent
+          this.#emojiPicker.style.display = 'none'
+        })
+      })
+
+      // SAKER ATT FIXA:
+      // Användar namnet sparas inte om jag refershar sidan, det ska sparas även om sidan refreshas.
+      // Fixa så att en text 'error-messesage' visas första gången att användaren måste skriva in ett användarnamn.
     }
 
     /**
@@ -158,7 +190,7 @@ customElements.define('message-application',
           this.socket = new WebSocket(URL)
           this.socket.onmessage = this.handleMessage.bind(this)
           this.#sendButton.addEventListener('click', () => this.sendMessage())
-          this.#errorMessage.style.display = 'none' //  Fixa error-message senare. fungerar inte som tänkt !!!!
+          this.#errorMessage.style.display = 'none'
         } else {
           this.#errorMessage.textContent = 'Please enter your username'
           this.#errorMessage.style.display = 'block'
