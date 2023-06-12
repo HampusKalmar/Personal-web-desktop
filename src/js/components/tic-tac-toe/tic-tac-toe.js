@@ -9,15 +9,15 @@ template.innerHTML = `
       grid-template-columns: repeat(3, 1fr);¨
       grid-gap: 10px;
       padding: 1px;
-      width: 300px;
-      height: 300px;
+      width: 400px;
+      height: 400px;
       justify-items: center;
       align-items: center;
-      background: #000;
+      background: #2b2d42;
     }
 
     #ticTacToe-board > div {
-      background-color: #ddd;
+      background-color: #2b2d42;
       width: 100%;
       height: 100%;
       display: flex;
@@ -25,12 +25,16 @@ template.innerHTML = `
       justify-content: center;
       font-size: 2em;
       user-select: none;
-      border: 1px solid #000;
+      margin-top: 20px;
+      border: 3px solid #edf2f4;
+      color: #edf2f4;
     }
 
     #status {
       font-size: 20px;
       font-family: fantasy;
+      color: #edf2f4;
+      margin-top: 12px;
     }
 
   </style>
