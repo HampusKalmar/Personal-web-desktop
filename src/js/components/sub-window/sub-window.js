@@ -1,4 +1,5 @@
 import '../message-application/message-application.js'
+import '../tic-tac-toe/tic-tac-toe.js'
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -23,6 +24,10 @@ customElements.define('main-window',
  */
   class extends HTMLElement {
     #mainWindow
+
+    #messageApp
+
+    #ticTacToe
     /**
      * A constructor that instantiates the private members.
      */
@@ -62,23 +67,26 @@ customElements.define('main-window',
      * Creates a duplicate button and attaches an event listener to it.
      *
      * @param {HTMLElement} popUpWindow - The pop-up window element to attach the button to.
+     * @param {string} appType - The type of application to duplicate.
      * @returns {HTMLElement} duplicateButton - The created duplicate button element.
      */
-    createDuplicateButton (popUpWindow) {
+    createDuplicateButton (popUpWindow, appType) {
       const duplicateButton = document.createElement('button')
       duplicateButton.textContent = 'Duplicate'
       duplicateButton.classList.add('duplicate-button')
       duplicateButton.addEventListener('click', (event) => {
         event.stopPropagation()
-        this.#duplicatePopUpWindow(popUpWindow)
+        this.#duplicatePopUpWindow(popUpWindow, appType)
       })
       return duplicateButton
     }
 
     /**
      * A method that creates pop up windows.
+     *
+     * @param {string} appType - The type of application to include in the window.
      */
-    async createPopUpWindow () {
+    async createPopUpWindow (appType) {
       const popUpWindow = document.createElement('div')
       popUpWindow.classList.add('pop-up-window')
 
@@ -88,6 +96,14 @@ customElements.define('main-window',
       const duplicateButton = this.createDuplicateButton(popUpWindow)
       popUpWindow.appendChild(duplicateButton)
 
+      if (appType === 'message') {
+        const messageApp = document.createElement('message-application')
+        popUpWindow.appendChild(messageApp)
+      } else if (appType === 'tic-tac-toe') {
+        const ticTacToeGame = document.createElement('tic-tac-toe')
+        popUpWindow.appendChild(ticTacToeGame)
+      }
+
       this.#mainWindow.appendChild(popUpWindow)
       this.#addDragEventListeners(popUpWindow)
     }
@@ -96,16 +112,25 @@ customElements.define('main-window',
      * A method that duplicates the pop up window.
      *
      * @param {HTMLElement} popUpWindow - The Pop-up window element do duplicate.
+     * @param {string} appType - The type of application to include in the duplicated window.
      */
-    async #duplicatePopUpWindow (popUpWindow) {
+    async #duplicatePopUpWindow (popUpWindow, appType) {
       const duplicatedPopUpWindow = popUpWindow.cloneNode(false)
 
       const closeButton = this.createCloseButton(duplicatedPopUpWindow)
       duplicatedPopUpWindow.appendChild(closeButton)
 
       const duplicateButton = this.createDuplicateButton(duplicatedPopUpWindow)
-
       duplicatedPopUpWindow.appendChild(duplicateButton)
+
+      if (appType === 'message') {
+        const messageApp = document.createElement('message-application')
+        duplicatedPopUpWindow.appendChild(messageApp)
+      } else if (appType === 'tic-tac-toe') {
+        const ticTacToeGame = document.createElement('tic-tac-toe')
+        duplicatedPopUpWindow.appendChild(ticTacToeGame)
+      }
+
       this.#mainWindow.appendChild(duplicatedPopUpWindow)
       this.#addDragEventListeners(duplicatedPopUpWindow)
     }
