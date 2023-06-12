@@ -6,7 +6,7 @@ template.innerHTML = `
     <input type="text" id="username-input" placeholder="Enter username"/>
     <button id="username-button">Enter Username</button>
     <input type="text" id="message-input" placeholder="Type your message"/>
-    <button id="send-button">Send</button>
+    <button id="send-button">Send Message</button>
     <button id="emoji-button">🙂</button>
     <div id="emoji-picker" style="display: none;">
       <span class="emoji">😀</span>
@@ -122,6 +122,15 @@ customElements.define('message-application',
       this.#messageInput.style.display = 'none'
       this.#sendButton.style.display = 'none'
 
+      this.username = localStorage.getItem('username')
+      if (this.username) {
+        this.#messageInput.style.display = 'block'
+        this.#sendButton.style.display = 'block'
+
+        this.#usernameInput.style.display = 'none'
+        this.#usernameButton.style.display = 'none'
+      }
+
       this.#emojiButton.addEventListener('click', () => {
         this.#emojiPicker.style.display = this.#emojiPicker.style.display === 'none' ? 'block' : 'none'
       })
@@ -189,21 +198,24 @@ customElements.define('message-application',
      * Initializes the chat application.
      */
     initChatApp () {
-      this.#usernameButton.addEventListener('click', () => {
-        this.username = this.#usernameInput.value
-        if (this.username) {
-          localStorage.setItem('username', this.username)
-          this.socket = new WebSocket(URL)
-          this.socket.onmessage = this.handleMessage.bind(this)
-          this.#sendButton.style.display = 'block'
-          this.#messageInput.style.display = 'block'
-          this.#sendButton.addEventListener('click', () => this.sendMessage())
-          this.#errorMessage.style.display = 'none'
-        } else {
-          this.#errorMessage.textContent = 'Please enter your username'
-          this.#errorMessage.style.display = 'block'
-        }
-      })
+      this.username = localStorage.getItem('username')
+      if (this.username) {
+        this.setupChat()
+      } else {
+        this.#usernameButton.addEventListener('click', () => {
+          this.username = this.#usernameInput.value
+          if (this.username) {
+            localStorage.setItem('username', this.username)
+            this.setupChat()
+            this.#errorMessage.style.display = 'none'
+            this.#usernameInput.style.display = 'none'
+            this.#usernameButton.style.display = 'none'
+          } else {
+            this.#errorMessage.textContent = 'Please enter your username'
+            this.#errorMessage.style.display = 'block'
+          }
+        })
+      }
     }
 
     /**
@@ -220,5 +232,17 @@ customElements.define('message-application',
         }
         this.displayMessages(this.messageQueue)
       }
+    }
+
+    /**
+     * Sets up a chat connection by initializing a WebSocket.
+     */
+    setupChat () {
+      this.socket = new WebSocket(URL)
+      this.socket.onmessage = this.handleMessage.bind(this)
+      this.#messageInput.style.display = 'block'
+      this.#sendButton.style.display = 'block'
+
+      this.#sendButton.addEventListener('click', () => this.sendMessage())
     }
   })
