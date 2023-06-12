@@ -13,6 +13,7 @@ template.innerHTML = `
       height: 400px;
       justify-items: center;
       align-items: center;
+      padding-left: 35px;
       background: #2b2d42;
     }
 

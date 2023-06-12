@@ -21,12 +21,13 @@ template.innerHTML = `
 
   <style>
     #message-app {
-      border: 2px solid #000;
+      border: 1px solid #edf2f4;
       border-radius: 10px;
-      padding: 20px;
-      width: 200px;
+      padding: 30px;
+      width: 400px;
       height: 400px;
-      overflow: auto; 
+      overflow: auto;
+      margin-top: 3px; 
     }
 
     #message-list {
@@ -35,10 +36,12 @@ template.innerHTML = `
       margin: 0;
       height: 70%;
       overflow: auto;
+      color: #edf2f4;
+      font-family: fantasy;
     }
 
     #message-input {
-      width: 96%;
+      width: 98%;
       margin-top: 10px;
     }
 
@@ -53,7 +56,7 @@ template.innerHTML = `
     }
 
     #username-input {
-      width: 96%;
+      width: 98%;
       margin-top: 10px;
     }
 
@@ -115,6 +118,9 @@ customElements.define('message-application',
       this.#emojiButton = this.shadowRoot.querySelector('#emoji-button')
       this.#emojiPicker = this.shadowRoot.querySelector('#emoji-picker')
       this.#emojis = this.shadowRoot.querySelectorAll('.emoji')
+
+      this.#messageInput.style.display = 'none'
+      this.#sendButton.style.display = 'none'
 
       this.#emojiButton.addEventListener('click', () => {
         this.#emojiPicker.style.display = this.#emojiPicker.style.display === 'none' ? 'block' : 'none'
@@ -189,6 +195,8 @@ customElements.define('message-application',
           localStorage.setItem('username', this.username)
           this.socket = new WebSocket(URL)
           this.socket.onmessage = this.handleMessage.bind(this)
+          this.#sendButton.style.display = 'block'
+          this.#messageInput.style.display = 'block'
           this.#sendButton.addEventListener('click', () => this.sendMessage())
           this.#errorMessage.style.display = 'none'
         } else {
