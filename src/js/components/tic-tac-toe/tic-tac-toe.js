@@ -28,6 +28,11 @@ template.innerHTML = `
       border: 1px solid #000;
     }
 
+    #status {
+      font-size: 20px;
+      font-family: fantasy;
+    }
+
   </style>
 `
 customElements.define('tic-tac-toe',
@@ -79,12 +84,15 @@ customElements.define('tic-tac-toe',
      * @param {HTMLElement} cell - The clicked cell element.
      */
     handleCellClick (cell) {
-      if (cell.textContent !== '') {
+      if (cell.textContent === '') {
         cell.textContent = this.#currentTurn
         cell.classList.add(this.#currentTurn)
       }
       if (this.checkWin(this.#currentTurn)) {
-        this.#status.textContent = 'You Win'
+        this.#status.textContent = 'You Win😀 '
+        setTimeout(() => this.startGame(), 2000)
+      } else if (this.isDraw()) {
+        this.#status.textContent = 'Draw😑'
         setTimeout(() => this.startGame(), 2000)
       } else {
         this.#currentTurn = 'o'
@@ -105,7 +113,7 @@ customElements.define('tic-tac-toe',
       cell.textContent = this.#currentTurn
       cell.classList.add(this.#currentTurn)
       if (this.checkWin(this.#currentTurn)) {
-        this.#status.textContent = 'You lose'
+        this.#status.textContent = 'You lose😔'
         setTimeout(() => this.startGame(), 2000)
       } else {
         this.#currentTurn = 'x'
@@ -135,5 +143,14 @@ customElements.define('tic-tac-toe',
         }
       }
       return false
+    }
+
+    /**
+     * Checks if the game is a draw.
+     *
+     * @returns {boolean} - True if the game is a draw, false otherwhise.
+     */
+    isDraw () {
+      return Array.from(this.#board.children).every(cell => cell.textContent !== '')
     }
   })
