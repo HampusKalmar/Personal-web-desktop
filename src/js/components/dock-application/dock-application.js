@@ -9,12 +9,15 @@ template.innerHTML = `
   <div id="dock-container">
     <button class="dock-item" data-app="chat">
       <img src="${IMG_ONE}" class="logos"/>
+      <span class="toolTip">Chat</span>
     </button>
     <button class="dock-item">
       <img src="${IMG_TWO}" class="logos"/>
+      <span class="toolTip">Memory</span>
     </button>
     <button class="dock-item" data-app="tic-tac-toe">
       <img src="${IMG_THREE}" class="logos"/>
+      <span class="toolTip">Tic tac toe</span>
     </button>
   </div>
 
@@ -22,11 +25,11 @@ template.innerHTML = `
     #dock-container {
       display: flex;
       justify-content: center;
-      align-items: center;
       position: fixed;
       bottom: 0;
+      left: 0;
       width: 100%;
-      height: 80px;
+      height: 140px;
       background: #2b2d42;
     }
 
@@ -40,10 +43,30 @@ template.innerHTML = `
     }
 
     .logos {
-      width: 50px;
-      height: 50px;
+      width: 65px;
+      height: 60px;
       color: #edf2f4;
     }
+
+    .toolTip {
+      visibility: hidden;
+      background-color: #8d99ae;
+      color: #edf2f4;
+      padding: 5px 3px;
+      border-radius: 6px;
+      z-index: 1;
+      bottom: 20%; /* Position the tooltip above the button */
+      left: 50%;
+      margin-left: -50px; /* Center the tooltip */
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .dock-item:hover .toolTip {
+      visibility: visible;
+      opacity: 1;
+      margin-bottom: 10px;
+    } 
 
   </style>
 `
