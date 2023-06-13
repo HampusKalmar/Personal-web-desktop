@@ -61,7 +61,7 @@ template.innerHTML = `
       color: #edf2f4;
       display: flex;
       justify-content: right;
-      margin-top: -15px;
+      margin-top: -22px;
     }
 
   </style>
@@ -136,11 +136,10 @@ customElements.define('memory-game',
       this.#clock.textContent = 'Time: 0s'
 
       let tiles = []
-      const totalTiles = 4 * 4
-      for (let i = 0; i < totalTiles / 2; i++) {
-        const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)]
-        tiles.push(randomEmoji)
-        tiles.push(randomEmoji)
+
+      for (let i = 0; i < EMOJIS.length; i++) {
+        tiles.push(EMOJIS[i])
+        tiles.push(EMOJIS[i])
       }
       tiles = this.shuffleArray(tiles)
 
