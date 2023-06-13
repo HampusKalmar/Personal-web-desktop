@@ -56,24 +56,6 @@ customElements.define('sub-window',
     }
 
     /**
-     * Creates a duplicate button and attaches an event listener to it.
-     *
-     * @param {HTMLElement} popUpWindow - The pop-up window element to attach the button to.
-     * @param {string} appType - The type of application to duplicate.
-     * @returns {HTMLElement} duplicateButton - The created duplicate button element.
-     */
-    createDuplicateButton (popUpWindow, appType) {
-      const duplicateButton = document.createElement('button')
-      duplicateButton.textContent = 'Duplicate'
-      duplicateButton.classList.add('duplicate-button')
-      duplicateButton.addEventListener('click', (event) => {
-        event.stopPropagation()
-        this.#duplicatePopUpWindow(popUpWindow, appType)
-      })
-      return duplicateButton
-    }
-
-    /**
      * A method that creates pop up windows.
      *
      * @param {string} appType - The type of application to include in the window.
@@ -84,9 +66,6 @@ customElements.define('sub-window',
 
       const closeButton = this.createCloseButton(popUpWindow)
       popUpWindow.appendChild(closeButton)
-
-      const duplicateButton = this.createDuplicateButton(popUpWindow, appType)
-      popUpWindow.appendChild(duplicateButton)
 
       if (appType === 'message') {
         const messageApp = document.createElement('message-application')
@@ -101,40 +80,6 @@ customElements.define('sub-window',
 
       this.#mainWindow.appendChild(popUpWindow)
       this.#addDragEventListeners(popUpWindow)
-    }
-
-    /**
-     * A method that duplicates the pop up window.
-     *
-     * @param {HTMLElement} popUpWindow - The Pop-up window element do duplicate.
-     * @param {string} appType - The type of application to include in the duplicated window.
-     */
-    async #duplicatePopUpWindow (popUpWindow, appType) {
-      if (popUpWindow.dataset.duplicated === 'true') {
-        return
-      }
-      const duplicatedPopUpWindow = popUpWindow.cloneNode(false)
-
-      const closeButton = this.createCloseButton(duplicatedPopUpWindow)
-      duplicatedPopUpWindow.appendChild(closeButton)
-
-      const duplicateButton = this.createDuplicateButton(duplicatedPopUpWindow)
-      duplicatedPopUpWindow.appendChild(duplicateButton)
-
-      if (appType === 'message') {
-        const messageApp = document.createElement('message-application')
-        duplicatedPopUpWindow.appendChild(messageApp)
-      } else if (appType === 'tic-tac-toe') {
-        const ticTacToeGame = document.createElement('tic-tac-toe')
-        duplicatedPopUpWindow.appendChild(ticTacToeGame)
-      } else if (appType === 'memory') {
-        const memoryGame = document.createElement('memory-game')
-        duplicatedPopUpWindow.appendChild(memoryGame)
-      }
-
-      this.#mainWindow.appendChild(duplicatedPopUpWindow)
-      this.#addDragEventListeners(duplicatedPopUpWindow)
-      popUpWindow.dataset.duplicated = 'true'
     }
 
     /**
