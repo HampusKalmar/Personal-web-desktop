@@ -49,10 +49,19 @@ template.innerHTML = `
     }
 
     #status {
-      font-size: 16px;
+      font-size: 14px;
       font-family: fantasy;
       color: #edf2f4;
       position: right;
+    }
+
+    #timer {
+      font-size: 14px;
+      font-family: fantasy;
+      color: #edf2f4;
+      display: flex;
+      justify-content: right;
+      margin-top: -15px;
     }
 
   </style>
@@ -79,6 +88,12 @@ customElements.define('memory-game',
 
     #status
 
+    #startTime
+
+    #timerInterval
+
+    #clock
+
     /**
      * A constructor that instantiates the private members.
      */
@@ -90,6 +105,10 @@ customElements.define('memory-game',
 
       this.#memoryBoard = this.shadowRoot.querySelector('#memory-board')
       this.#status = this.shadowRoot.querySelector('#status')
+      this.#clock = this.shadowRoot.querySelector('#timer')
+
+      this.#startTime = null
+      this.#timerInterval = null
     }
 
     /**
@@ -108,6 +127,13 @@ customElements.define('memory-game',
       this.#flippedTiles = []
       this.#memoryBoard.innerHTML = ''
       this.#status.textContent = ''
+
+      this.#startTime = null
+      if (this.#timerInterval !== null) {
+        clearInterval(this.#timerInterval)
+        this.#timerInterval = null
+      }
+      this.#clock.textContent = 'Time: 0s'
 
       let tiles = []
       const totalTiles = 4 * 4
