@@ -139,12 +139,14 @@ customElements.define('sub-window',
       let isDragging = false
       let offsetX = 0
       let offsetY = 0
+      this.zIndex = 1
 
       popUpWindow.addEventListener('mousedown', (event) => {
         isDragging = true
         offsetX = event.clientX - popUpWindow.getBoundingClientRect().left
         offsetY = event.clientY - popUpWindow.getBoundingClientRect().top
-        popUpWindow.classList.add('active-window')
+        this.zIndex += 1
+        popUpWindow.style.zIndex = this.zIndex
       })
 
       popUpWindow.addEventListener('mousemove', (event) => {
@@ -153,8 +155,6 @@ customElements.define('sub-window',
           const y = event.clientY - offsetY
           popUpWindow.style.left = `${x}px`
           popUpWindow.style.top = `${y}px`
-
-          // If a user presses the active window, then  that window should be displayd over the non-active window.
         }
       })
 
