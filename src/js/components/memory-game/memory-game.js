@@ -2,22 +2,25 @@ const EMOJIS = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓']
 
 const template = document.createElement('template')
 template.innerHTML = `
+  <div id="status"></div>
   <div id="memory-board"></div>
+  <div id="timer"></div>
+  
 
   <style>
     #memory-board {
       border: 3px solid #edf2f4;
       border-radius: 10px;
       padding: 20px;
-      width: 400px;
-      height: 400px;
-      overflow: auto;
+      width: 380px;
+      height: 380px;
       margin-top: 5px;
-      margin-left: 16px;
+      margin-left: 24px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 5px;
       justify-items: center;
+      position: fixed;
 
     }
 
@@ -25,14 +28,14 @@ template.innerHTML = `
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border: 1px solid #edf2f4;
       user-select: none;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
-      font-size: 40px;
+      font-size: 35px;
     }
 
     .tile[data-flipped="true"]:before,
@@ -43,6 +46,13 @@ template.innerHTML = `
     .tile[data-flipped="false"],
     .tile[data-matched="false"] {
       background-color: #8d99ae; 
+    }
+
+    #status {
+      font-size: 16px;
+      font-family: fantasy;
+      color: #edf2f4;
+      position: right;
     }
 
   </style>
@@ -67,6 +77,8 @@ customElements.define('memory-game',
 
     #attempts
 
+    #status
+
     /**
      * A constructor that instantiates the private members.
      */
@@ -77,6 +89,7 @@ customElements.define('memory-game',
         .appendChild(template.content.cloneNode(true))
 
       this.#memoryBoard = this.shadowRoot.querySelector('#memory-board')
+      this.#status = this.shadowRoot.querySelector('#status')
     }
 
     /**
@@ -94,6 +107,7 @@ customElements.define('memory-game',
       this.#attempts = 0
       this.#flippedTiles = []
       this.#memoryBoard.innerHTML = ''
+      this.#status.textContent = ''
 
       let tiles = []
       const totalTiles = 4 * 4
@@ -155,7 +169,8 @@ customElements.define('memory-game',
       this.#flippedTiles = []
       if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
         this.#gameOver = true
-        console.log(`Game over! You've made ${this.#attempts} attempts.`)
+        this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
+        setTimeout(() => this.startTheGame(), 3000)
       }
     }
 
