@@ -1,5 +1,6 @@
 import '../message-application/message-application.js'
 import '../tic-tac-toe/tic-tac-toe.js'
+import '../memory-game/memory-game.js'
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -93,6 +94,9 @@ customElements.define('sub-window',
       } else if (appType === 'tic-tac-toe') {
         const ticTacToeGame = document.createElement('tic-tac-toe')
         popUpWindow.appendChild(ticTacToeGame)
+      } else if (appType === 'memory') {
+        const memoryGame = document.createElement('memory-game')
+        popUpWindow.appendChild(memoryGame)
       }
 
       this.#mainWindow.appendChild(popUpWindow)
@@ -123,6 +127,9 @@ customElements.define('sub-window',
       } else if (appType === 'tic-tac-toe') {
         const ticTacToeGame = document.createElement('tic-tac-toe')
         duplicatedPopUpWindow.appendChild(ticTacToeGame)
+      } else if (appType === 'memory') {
+        const memoryGame = document.createElement('memory-game')
+        duplicatedPopUpWindow.appendChild(memoryGame)
       }
 
       this.#mainWindow.appendChild(duplicatedPopUpWindow)

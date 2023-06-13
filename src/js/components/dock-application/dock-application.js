@@ -11,7 +11,7 @@ template.innerHTML = `
       <img src="${IMG_ONE}" class="logos"/>
       <span class="toolTip">Chat</span>
     </button>
-    <button class="dock-item">
+    <button class="dock-item" data-app="memory">
       <img src="${IMG_TWO}" class="logos"/>
       <span class="toolTip">Memory</span>
     </button>
@@ -116,6 +116,9 @@ customElements.define('dock-application',
               break
             case 'tic-tac-toe':
               appType = 'tic-tac-toe'
+              break
+            case 'memory':
+              appType = 'memory'
               break
             default:
               console.log('Unknown dock item')

@@ -1,9 +1,4 @@
-const NUMBER_OF_IMAGES = 9
-
-const IMG_URLS = new Array(NUMBER_OF_IMAGES)
-for (let i = 0; i < NUMBER_OF_IMAGES; i++) {
-  IMG_URLS[i] = (new URL(`images/${i}.png`, import.meta.url)).href
-}
+const EMOJIS = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓']
 
 const template = document.createElement('template')
 template.innerHTML = `
@@ -11,27 +6,33 @@ template.innerHTML = `
 
   <style>
     #memory-board {
-      border: 1px solid #edf2f4;
+      border: 3px solid #edf2f4;
       border-radius: 10px;
-      padding: 30px;
+      padding: 20px;
       width: 400px;
       height: 400px;
       overflow: auto;
-      margin-top: 3px;
-      margin-left: 8px; 
+      margin-top: 5px;
+      margin-left: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 5px;
+      justify-items: center;
+
     }
 
     .tile {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 40px;
-      height: 40px;
-      border: 1px solid #8d99ae;
+      width: 60px;
+      height: 60px;
+      border: 1px solid #edf2f4;
       user-select: none;
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
+      font-size: 40px;
     }
 
     .tile[data-flipped="true"]:before,
@@ -41,7 +42,7 @@ template.innerHTML = `
 
     .tile[data-flipped="false"],
     .tile[data-matched="false"] {
-      background-color: #edf2f4; 
+      background-color: #8d99ae; 
     }
 
   </style>
@@ -82,10 +83,7 @@ customElements.define('memory-game',
      * A lifecycle callback that is called when the element is inserted into the DOM.
      */
     connectedCallback () {
-      this.#gameSize = '4x4'
-      this.#attempts = 0
-      this.#flippedTiles = []
-      this.#gameOver = false
+      this.startTheGame()
     }
 
     /**
@@ -100,16 +98,16 @@ customElements.define('memory-game',
       let tiles = []
       const totalTiles = 4 * 4
       for (let i = 0; i < totalTiles / 2; i++) {
-        const randomImage = Math.floor(Math.random() * NUMBER_OF_IMAGES)
-        tiles.push(randomImage)
-        tiles.push(randomImage)
+        const randomEmoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)]
+        tiles.push(randomEmoji)
+        tiles.push(randomEmoji)
       }
       tiles = this.shuffleArray(tiles)
 
       tiles.forEach((tile, index) => {
         const tileElement = document.createElement('div')
         tileElement.classList.add('tile')
-        tileElement.dataset.image = IMG_URLS[tile]
+        tileElement.dataset.image = tile
         tileElement.dataset.flipped = 'false'
         tileElement.dataset.matched = 'false'
         tileElement.addEventListener('click', this.flipTile.bind(this, tileElement))
@@ -137,10 +135,41 @@ customElements.define('memory-game',
       }
     }
 
-    unflipTiles() {
+    /**
+     * Unflips all currently flipped tiles by resetting their `dataset.flipped` property to 'false'.
+     */
+    unflipTiles () {
       this.#flippedTiles.forEach(tile => {
         tile.dataset.flipped = 'false'
       })
       this.#flippedTiles = []
+    }
+
+    /**
+     * Marks all flipped tiles as matched by setting their `dataset.matched` property to 'true'.
+     */
+    matchTiles () {
+      this.#flippedTiles.forEach(tile => {
+        tile.dataset.matched = 'true'
+      })
+      this.#flippedTiles = []
+      if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
+        this.#gameOver = true
+        console.log(`Game over! You've made ${this.#attempts} attempts.`)
+      }
+    }
+
+    /**
+     * Shuffles the elements in the provided array using the Fisher-Yates algorithm.
+     *
+     * @param {Array} array - The method takes an array parameter and returns the shuffled array.
+     * @returns {Array} - The shuffled array.
+     */
+    shuffleArray (array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]
+      }
+      return array
     }
   })
