@@ -109,6 +109,12 @@ customElements.define('memory-game',
 
       this.#startTime = null
       this.#timerInterval = null
+
+      //
+      // SAKER KVAR ATT FIXA I DENNA MOUDUL:
+      // 1. Ska finnas tre olika storlekar på memory-brädet!
+      // 2. Min egna timer som ska räkna hur länge det tar för en spelare att -
+      // - klara memoryt, timerna ska starta efter att användaren trycker på första "tile:n".
     }
 
     /**
@@ -160,16 +166,15 @@ customElements.define('memory-game',
      * @param {HTMLElement} tileElement - The HTML element representing the tile to be flipped.
      */
     flipTile (tileElement) {
-      if (this.#gameOver || tileElement.dataset.matched === 'true') return
-      if (this.#flippedTiles.length === 2) {
-        this.unflipTiles()
-      }
+      if (this.#gameOver || tileElement.dataset.matched === 'true' || this.#flippedTiles.length === 2) return
       tileElement.dataset.flipped = 'true'
       this.#flippedTiles.push(tileElement)
       if (this.#flippedTiles.length === 2) {
         this.#attempts++
         if (this.#flippedTiles[0].dataset.image === this.#flippedTiles[1].dataset.image) {
           this.matchTiles()
+        } else {
+          setTimeout(() => this.unflipTiles(), 1500)
         }
       }
     }
@@ -195,7 +200,7 @@ customElements.define('memory-game',
       if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
         this.#gameOver = true
         this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
-        setTimeout(() => this.startTheGame(), 3000)
+        setTimeout(() => this.startTheGame(), 3500)
       }
     }
 
