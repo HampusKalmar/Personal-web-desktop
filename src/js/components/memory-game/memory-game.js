@@ -22,8 +22,28 @@ template.innerHTML = `
     }
 
     .tile {
-
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid #8d99ae;
+      user-select: none;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
     }
+
+    .tile[data-flipped="true"]:before,
+    .tile[data-matched="true"]:before {
+      content: attr(data-image)
+    }
+
+    .tile[data-flipped="false"],
+    .tile[data-matched="false"] {
+      background-color: #edf2f4; 
+    }
+
   </style>
 `
 
@@ -115,5 +135,12 @@ customElements.define('memory-game',
           this.matchTiles()
         }
       }
+    }
+
+    unflipTiles() {
+      this.#flippedTiles.forEach(tile => {
+        tile.dataset.flipped = 'false'
+      })
+      this.#flippedTiles = []
     }
   })
