@@ -27,7 +27,8 @@ template.innerHTML = `
       width: 400px;
       height: 400px;
       overflow: auto;
-      margin-top: 3px; 
+      margin-top: 3px;
+      margin-left: 8px; 
     }
 
     #message-list {
@@ -61,8 +62,11 @@ template.innerHTML = `
     }
 
     #error-message {
-      color: red;
+      color: #edf2f4;
       display: none;
+      font-size: 25px;
+      margin-top: -50px;
+      font-family: fantasy;
     }
   </style>
 `
@@ -141,10 +145,6 @@ customElements.define('message-application',
           this.#emojiPicker.style.display = 'none'
         })
       })
-
-      // SAKER ATT FIXA:
-      // Användar namnet sparas inte om jag refershar sidan, det ska sparas även om sidan refreshas.
-      // Fixa så att en text 'error-messesage' visas första gången att användaren måste skriva in ett användarnamn.
     }
 
     /**

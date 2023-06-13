@@ -106,6 +106,9 @@ customElements.define('sub-window',
      * @param {string} appType - The type of application to include in the duplicated window.
      */
     async #duplicatePopUpWindow (popUpWindow, appType) {
+      if (popUpWindow.dataset.duplicated === 'true') {
+        return
+      }
       const duplicatedPopUpWindow = popUpWindow.cloneNode(false)
 
       const closeButton = this.createCloseButton(duplicatedPopUpWindow)
@@ -124,6 +127,7 @@ customElements.define('sub-window',
 
       this.#mainWindow.appendChild(duplicatedPopUpWindow)
       this.#addDragEventListeners(duplicatedPopUpWindow)
+      popUpWindow.dataset.duplicated = 'true'
     }
 
     /**
@@ -140,6 +144,7 @@ customElements.define('sub-window',
         isDragging = true
         offsetX = event.clientX - popUpWindow.getBoundingClientRect().left
         offsetY = event.clientY - popUpWindow.getBoundingClientRect().top
+        popUpWindow.classList.add('active-window')
       })
 
       popUpWindow.addEventListener('mousemove', (event) => {
@@ -148,6 +153,8 @@ customElements.define('sub-window',
           const y = event.clientY - offsetY
           popUpWindow.style.left = `${x}px`
           popUpWindow.style.top = `${y}px`
+
+          // If a user presses the active window, then  that window should be displayd over the non-active window.
         }
       })
 

@@ -1,11 +1,21 @@
 import '../sub-window/sub-window.js'
 
+const IMG_ONE = (new URL('images/chat.png', import.meta.url)).href
+const IMG_TWO = (new URL('images/memory.png', import.meta.url)).href
+const IMG_THREE = (new URL('images/game.png', import.meta.url)).href
+
 const template = document.createElement('template')
 template.innerHTML = `
   <div id="dock-container">
-    <button class="dock-item">Chat</button>
-    <button class="dock-item">Memory</button>
-    <button class="dock-item">Tic Tac Toe</button>
+    <button class="dock-item" data-app="chat">
+      <img src="${IMG_ONE}" class="logos"/>
+    </button>
+    <button class="dock-item">
+      <img src="${IMG_TWO}" class="logos"/>
+    </button>
+    <button class="dock-item" data-app="tic-tac-toe">
+      <img src="${IMG_THREE}" class="logos"/>
+    </button>
   </div>
 
   <style>
@@ -27,6 +37,12 @@ template.innerHTML = `
       border: none;
       font-family: fantasy;
       font-size: 20px;
+    }
+
+    .logos {
+      width: 50px;
+      height: 50px;
+      color: #edf2f4;
     }
 
   </style>
@@ -70,11 +86,11 @@ customElements.define('dock-application',
           const subWindow = document.createElement('sub-window')
           let appType
 
-          switch (item.textContent.trim()) {
-            case 'Chat':
+          switch (item.getAttribute('data-app')) {
+            case 'chat':
               appType = 'message'
               break
-            case 'Tic Tac Toe':
+            case 'tic-tac-toe':
               appType = 'tic-tac-toe'
               break
             default:
