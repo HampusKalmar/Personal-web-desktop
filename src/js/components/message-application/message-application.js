@@ -21,14 +21,14 @@ template.innerHTML = `
 
   <style>
     #message-app {
-      border: 1px solid #edf2f4;
+      border: 3px solid #edf2f4;
       border-radius: 10px;
-      padding: 30px;
+      padding: 20px;
       width: 400px;
       height: 400px;
       overflow: auto;
       margin-top: 3px;
-      margin-left: 8px; 
+      margin-left: 15px; 
     }
 
     #message-list {

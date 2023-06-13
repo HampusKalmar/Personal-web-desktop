@@ -11,6 +11,17 @@ template.innerHTML = `
 
   <style>
     #memory-board {
+      border: 1px solid #edf2f4;
+      border-radius: 10px;
+      padding: 30px;
+      width: 400px;
+      height: 400px;
+      overflow: auto;
+      margin-top: 3px;
+      margin-left: 8px; 
+    }
+
+    .tile {
 
     }
   </style>
@@ -55,5 +66,54 @@ customElements.define('memory-game',
       this.#attempts = 0
       this.#flippedTiles = []
       this.#gameOver = false
+    }
+
+    /**
+     * Starts the game by initializing game-related variables and creating the memory board.
+     */
+    startTheGame () {
+      this.#gameOver = false
+      this.#attempts = 0
+      this.#flippedTiles = []
+      this.#memoryBoard.innerHTML = ''
+
+      let tiles = []
+      const totalTiles = 4 * 4
+      for (let i = 0; i < totalTiles / 2; i++) {
+        const randomImage = Math.floor(Math.random() * NUMBER_OF_IMAGES)
+        tiles.push(randomImage)
+        tiles.push(randomImage)
+      }
+      tiles = this.shuffleArray(tiles)
+
+      tiles.forEach((tile, index) => {
+        const tileElement = document.createElement('div')
+        tileElement.classList.add('tile')
+        tileElement.dataset.image = IMG_URLS[tile]
+        tileElement.dataset.flipped = 'false'
+        tileElement.dataset.matched = 'false'
+        tileElement.addEventListener('click', this.flipTile.bind(this, tileElement))
+        this.#memoryBoard.appendChild(tileElement)
+      })
+    }
+
+    /**
+     * Flips a tile on the game board.
+     *
+     * @param {HTMLElement} tileElement - The HTML element representing the tile to be flipped.
+     */
+    flipTile (tileElement) {
+      if (this.#gameOver || tileElement.dataset.matched === 'true') return
+      if (this.#flippedTiles.length === 2) {
+        this.unflipTiles()
+      }
+      tileElement.dataset.flipped = 'true'
+      this.#flippedTiles.push(tileElement)
+      if (this.#flippedTiles.length === 2) {
+        this.#attempts++
+        if (this.#flippedTiles[0].dataset.image === this.#flippedTiles[1].dataset.image) {
+          this.matchTiles()
+        }
+      }
     }
   })

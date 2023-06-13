@@ -43,9 +43,10 @@ template.innerHTML = `
     }
 
     .logos {
-      width: 65px;
+      width: 70px;
       height: 60px;
-      color: #edf2f4;
+      color: #000;
+      border: 3px solid;
     }
 
     .toolTip {
