@@ -13,10 +13,19 @@ template.innerHTML = `
       position: absolute;
       background-color: #2b2d42;
       color: #000;
-      padding: 10px;
+      padding: 11px;
       box-sizing: border-box;
       box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
       border-radius: 18px;
+    }
+
+    .close-button {
+      background-color: #8d99ae;
+      color: #edf2f4;
+      border: 1px solid #edf2f4;
+      border-radius: 25%;
+      width: 25px;
+      height: 25px;
     }
   </style>
 `

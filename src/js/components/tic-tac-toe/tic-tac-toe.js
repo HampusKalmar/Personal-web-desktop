@@ -13,7 +13,7 @@ template.innerHTML = `
       height: 400px;
       justify-items: center;
       align-items: center;
-      padding-left: 35px;
+      padding-left: 37px;
       background: #2b2d42;
     }
 
@@ -29,6 +29,7 @@ template.innerHTML = `
       margin-top: 20px;
       border: 3px solid #edf2f4;
       color: #edf2f4;
+      border-radius: 9px;
     }
 
     #status {

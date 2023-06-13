@@ -15,7 +15,7 @@ template.innerHTML = `
       width: 380px;
       height: 380px;
       margin-top: 5px;
-      margin-left: 24px;
+      margin-left: 25px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 5px;
