@@ -7,8 +7,11 @@ template.innerHTML = `
   <div id="timer"></div>
 
   <div id="input-contianer">
-    <input id="rows-input" type="number" min="2" max="6" placeholder="Rows (2-6)" />
-    <input id="columns-input" type="number" min="2" max="6" placeholder="Columns (2-6)" />
+    <select id="board-size-select">
+      <option value="4x4">4x4</option>
+      <option value="4x2">4x2</option>
+      <option value="2x2">2x2</option>
+    </select>
     <button id="resize-button">Resize</button>
   </div>
 
@@ -16,10 +19,10 @@ template.innerHTML = `
     #memory-board {
       border: 3px solid #edf2f4;
       border-radius: 10px;
-      padding: 20px;
+      padding: 30px;
       width: 320px;
       height: 320px;
-      margin-top: 5px;
+      margin-top: 20px;
       margin-left: 52px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -37,27 +40,14 @@ template.innerHTML = `
       margin-top: 10px;
     }
 
-    #rows-input {
+    #board-size-select {
       display: flex;
-      justify-items: bottom;
-      margin-top: 385px;
+      margin-top: 26px;
       background-color: #8d99ae;
-      color: #edf2f4;
       border: 1px solid #edf2f4;
-      border-radius: 7%;
-      width: 110px;
-      height: 20px;
-    }
-
-    #columns-input {
-      display: flex;
-      justify-items: bottom;
-      background-color: #8d99ae;
       color: #edf2f4;
-      border: 1px solid #edf2f4;
+      width: 46px;
       border-radius: 7%;
-      width: 110px;
-      height: 20px;
     }
 
     #resize-button {
@@ -68,7 +58,7 @@ template.innerHTML = `
       color: #edf2f4;
       border: 1px solid #edf2f4;
       border-radius: 7%;
-      width: 50px;
+      width: 46px;
       height: 20px;
     }
 
@@ -165,8 +155,7 @@ customElements.define('memory-game',
 
       //
       // SAKER KVAR ATT FIXA I DENNA MOUDUL:
-      // 1. Ska finnas tre olika storlekar på memory-brädet!
-      // 2. få applikation att fungera med kyboardet enbart.
+      // 1. få applikation att fungera med kyboardet enbart.
     }
 
     /**
@@ -175,21 +164,12 @@ customElements.define('memory-game',
     connectedCallback () {
       this.startTheGame()
 
+      this.#resizeButton = this.shadowRoot.querySelector('#resize-button')
+
       this.#resizeButton.addEventListener('click', () => {
-        const rowsInput = this.shadowRoot.querySelector('#rows-input')
-        const columnsInput = this.shadowRoot.querySelector('#columns-input')
-        if (rowsInput.value && columnsInput.value) {
-          const rows = parseInt(rowsInput.value)
-          const columns = parseInt(columnsInput.value)
-          // Verify the inputs are within the acceptable range
-          if (rows >= 2 && rows <= 6 && columns >= 2 && columns <= 6) {
-            this.setBoardSize(rows, columns)
-          } else {
-            alert('Please enter values between 2 and 6 for both rows and columns.')
-          }
-        } else {
-          alert('Please fill in both the rows and columns fields.')
-        }
+        const boardSizeSelect = this.shadowRoot.querySelector('#board-size-select')
+        const [rows, columns] = boardSizeSelect.value.split('x').map(Number)
+        this.setBoardSize(rows, columns)
       })
     }
 
@@ -291,7 +271,7 @@ customElements.define('memory-game',
           this.#gameOver = true
           clearInterval(this.#timerInterval)
           const elapsedSeconds = Math.floor((Date.now() - this.#startTime) / 1000)
-          this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
+          this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀`
           this.#clock.textContent = `You finished in ${elapsedSeconds} seconds`
           setTimeout(() => this.startTheGame(), 4000)
         }
