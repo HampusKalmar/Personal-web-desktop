@@ -29,6 +29,7 @@ template.innerHTML = `
     }
   </style>
 `
+
 customElements.define('sub-window',
 /**
  *

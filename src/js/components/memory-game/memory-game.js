@@ -5,23 +5,71 @@ template.innerHTML = `
   <div id="status"></div>
   <div id="memory-board"></div>
   <div id="timer"></div>
-  
+
+  <div id="input-contianer">
+    <input id="rows-input" type="number" min="2" max="6" placeholder="Rows (2-6)" />
+    <input id="columns-input" type="number" min="2" max="6" placeholder="Columns (2-6)" />
+    <button id="resize-button">Resize</button>
+  </div>
 
   <style>
     #memory-board {
       border: 3px solid #edf2f4;
       border-radius: 10px;
       padding: 20px;
-      width: 380px;
-      height: 380px;
+      width: 320px;
+      height: 320px;
       margin-top: 5px;
-      margin-left: 25px;
+      margin-left: 52px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: 5px;
       justify-items: center;
       position: fixed;
 
+    }
+
+    #input-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    #rows-input {
+      display: flex;
+      justify-items: bottom;
+      margin-top: 385px;
+      background-color: #8d99ae;
+      color: #edf2f4;
+      border: 1px solid #edf2f4;
+      border-radius: 7%;
+      width: 110px;
+      height: 20px;
+    }
+
+    #columns-input {
+      display: flex;
+      justify-items: bottom;
+      background-color: #8d99ae;
+      color: #edf2f4;
+      border: 1px solid #edf2f4;
+      border-radius: 7%;
+      width: 110px;
+      height: 20px;
+    }
+
+    #resize-button {
+      display: flex;
+      margin-bottom: 60px;
+      margin-top: 6px;
+      background-color: #8d99ae;
+      color: #edf2f4;
+      border: 1px solid #edf2f4;
+      border-radius: 7%;
+      width: 50px;
+      height: 20px;
     }
 
     .tile {
@@ -78,7 +126,7 @@ customElements.define('memory-game',
   class extends HTMLElement {
     #memoryBoard
 
-    #gameSize
+    #boardSize
 
     #flippedTiles
 
@@ -94,6 +142,8 @@ customElements.define('memory-game',
 
     #clock
 
+    #resizeButton
+
     /**
      * A constructor that instantiates the private members.
      */
@@ -106,9 +156,12 @@ customElements.define('memory-game',
       this.#memoryBoard = this.shadowRoot.querySelector('#memory-board')
       this.#status = this.shadowRoot.querySelector('#status')
       this.#clock = this.shadowRoot.querySelector('#timer')
+      this.#resizeButton = this.shadowRoot.querySelector('resize-button')
 
       this.#startTime = null
       this.#timerInterval = null
+
+      this.#boardSize = { rows: 4, columns: 4 }
 
       //
       // SAKER KVAR ATT FIXA I DENNA MOUDUL:
@@ -121,6 +174,23 @@ customElements.define('memory-game',
      */
     connectedCallback () {
       this.startTheGame()
+
+      this.#resizeButton.addEventListener('click', () => {
+        const rowsInput = this.shadowRoot.querySelector('#rows-input')
+        const columnsInput = this.shadowRoot.querySelector('#columns-input')
+        if (rowsInput.value && columnsInput.value) {
+          const rows = parseInt(rowsInput.value)
+          const columns = parseInt(columnsInput.value)
+          // Verify the inputs are within the acceptable range
+          if (rows >= 2 && rows <= 6 && columns >= 2 && columns <= 6) {
+            this.setBoardSize(rows, columns)
+          } else {
+            alert('Please enter values between 2 and 6 for both rows and columns.')
+          }
+        } else {
+          alert('Please fill in both the rows and columns fields.')
+        }
+      })
     }
 
     /**
@@ -141,21 +211,33 @@ customElements.define('memory-game',
 
       let tiles = []
 
-      for (let i = 0; i < EMOJIS.length; i++) {
-        tiles.push(EMOJIS[i])
-        tiles.push(EMOJIS[i])
+      for (let i = 0; i < this.#boardSize.rows * this.#boardSize.columns / 2; i++) {
+        tiles.push(i % EMOJIS.length)
+        tiles.push(i % EMOJIS.length)
       }
       tiles = this.shuffleArray(tiles)
 
+      this.#memoryBoard.style.gridTemplateColumns = `repeat(${this.#boardSize.columns}, 1fr)`
       tiles.forEach((tile, index) => {
         const tileElement = document.createElement('div')
         tileElement.classList.add('tile')
-        tileElement.dataset.image = tile
+        tileElement.dataset.image = EMOJIS[tile]
         tileElement.dataset.flipped = 'false'
         tileElement.dataset.matched = 'false'
         tileElement.addEventListener('click', this.flipTile.bind(this, tileElement))
         this.#memoryBoard.appendChild(tileElement)
       })
+    }
+
+    /**
+     * Sets the size of the game board based on the number of rows and columns.
+     *
+     * @param {number} rows - Number of rows on the board.
+     * @param {number} columns - Number of columns on the board.
+     */
+    setBoardSize (rows, columns) {
+      this.#boardSize = { rows, columns }
+      this.startTheGame()
     }
 
     /**
