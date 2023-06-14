@@ -44,6 +44,9 @@ customElements.define('sub-window',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#mainWindow = this.shadowRoot.querySelector('#window-container')
+
+      // SAKER ATT FIXA:
+      // Z-index är fel på, om jag "spammar" på ett fönster, så tar det så många gånger + 1 att få upp det andra fönstret bakom.
     }
 
     /**

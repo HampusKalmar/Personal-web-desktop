@@ -61,6 +61,9 @@ customElements.define('tic-tac-toe',
         .appendChild(template.content.cloneNode(true))
       this.#board = this.shadowRoot.querySelector('#ticTacToe-board')
       this.#status = this.shadowRoot.querySelector('#status')
+
+      // SAKER KVAR ATT FIXA:
+      // Få applikationen att fungera med bara keyboard.
     }
 
     /**

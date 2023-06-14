@@ -56,9 +56,9 @@ template.innerHTML = `
       padding: 5px 3px;
       border-radius: 6px;
       z-index: 1;
-      bottom: 20%; /* Position the tooltip above the button */
+      bottom: 20%;
       left: 50%;
-      margin-left: -50px; /* Center the tooltip */
+      margin-left: -50px; 
       opacity: 0;
       transition: opacity 0.5s;
     }

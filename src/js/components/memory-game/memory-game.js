@@ -113,8 +113,7 @@ customElements.define('memory-game',
       //
       // SAKER KVAR ATT FIXA I DENNA MOUDUL:
       // 1. Ska finnas tre olika storlekar på memory-brädet!
-      // 2. Min egna timer som ska räkna hur länge det tar för en spelare att -
-      // - klara memoryt, timerna ska starta efter att användaren trycker på första "tile:n".
+      // 2. få applikation att fungera med kyboardet enbart.
     }
 
     /**
@@ -133,7 +132,6 @@ customElements.define('memory-game',
       this.#flippedTiles = []
       this.#memoryBoard.innerHTML = ''
       this.#status.textContent = ''
-
       this.#startTime = null
       if (this.#timerInterval !== null) {
         clearInterval(this.#timerInterval)
@@ -169,6 +167,10 @@ customElements.define('memory-game',
       if (this.#gameOver || tileElement.dataset.matched === 'true' || this.#flippedTiles.length === 2) return
       tileElement.dataset.flipped = 'true'
       this.#flippedTiles.push(tileElement)
+
+      if (!this.#startTime) {
+        this.startTimer()
+      }
       if (this.#flippedTiles.length === 2) {
         this.#attempts++
         if (this.#flippedTiles[0].dataset.image === this.#flippedTiles[1].dataset.image) {
@@ -205,10 +207,24 @@ customElements.define('memory-game',
         this.#flippedTiles = []
         if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
           this.#gameOver = true
+          clearInterval(this.#timerInterval)
+          const elapsedSeconds = Math.floor((Date.now() - this.#startTime) / 1000)
           this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
+          this.#clock.textContent = `You finished in ${elapsedSeconds} seconds`
           setTimeout(() => this.startTheGame(), 4000)
         }
       }, 2000)
+    }
+
+    /**
+     * A timer that checks how long a player took to finish the memory game.
+     */
+    startTimer () {
+      this.#startTime = Date.now()
+      this.#timerInterval = setInterval(() => {
+        const elapsedTime = Math.floor((Date.now() - this.#startTime) / 1000)
+        this.#clock.textContent = `Time: ${elapsedTime}s `
+      }, 1000)
     }
 
     /**
