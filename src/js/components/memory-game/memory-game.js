@@ -194,14 +194,21 @@ customElements.define('memory-game',
      */
     matchTiles () {
       this.#flippedTiles.forEach(tile => {
-        tile.dataset.matched = 'true'
+        this.#flippedTiles.forEach(tile => {
+          tile.dataset.matched = 'true'
+        })
       })
-      this.#flippedTiles = []
-      if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
-        this.#gameOver = true
-        this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
-        setTimeout(() => this.startTheGame(), 3500)
-      }
+      setTimeout(() => {
+        this.#flippedTiles.forEach(tile => {
+          tile.style.visibility = 'hidden'
+        })
+        this.#flippedTiles = []
+        if ([...this.#memoryBoard.querySelectorAll('.tile')].every(tile => tile.dataset.matched === 'true')) {
+          this.#gameOver = true
+          this.#status.textContent = `Game over! You've made ${this.#attempts} attempts😀.`
+          setTimeout(() => this.startTheGame(), 4000)
+        }
+      }, 2000)
     }
 
     /**
