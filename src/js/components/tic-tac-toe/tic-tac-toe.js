@@ -42,14 +42,33 @@ template.innerHTML = `
   </style>
 `
 customElements.define('tic-tac-toe',
-/**
- *
- */
+
+  /**
+   * Custom element representing a tic-tac-toe game.
+   */
   class extends HTMLElement {
+    /**
+     * Represents the tic-tac-toe board element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #board
 
+    /**
+     * Represents the status element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #status
 
+    /**
+     * Represents the current turn.
+     *
+     * @type {string}
+     * @private
+     */
     #currentTurn
 
     /**

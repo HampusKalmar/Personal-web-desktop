@@ -106,32 +106,92 @@ template.innerHTML = `
 `
 
 /**
- * Define a custom element.
+ * Defines a custom element representing a memory-game.
  */
 customElements.define('memory-game',
 
   /**
-   * Represents a memory game.
+   * Custom element that represents a memory game.
    */
   class extends HTMLElement {
+    /**
+     * Represents the memory board element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #memoryBoard
 
+    /**
+     * Represents the size of the memory board.
+     *
+     * @type {{ rows: number, columns: number }}
+     * @private
+     */
     #boardSize
 
+    /**
+     * Represents the flipped tiles in the game.
+     *
+     * @type {Array}
+     * @private
+     */
     #flippedTiles
 
+    /**
+     * Indicates whether the game is over or not.
+     *
+     * @type {boolean}
+     * @private
+     */
     #gameOver
 
+    /**
+     * Represents the number of attempts made in the game.
+     *
+     * @type {number}
+     * @private
+     */
     #attempts
 
+    /**
+     * Represents the status element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #status
 
+    /**
+     * Represents the start time of the game.
+     *
+     * @type {Date}
+     * @private
+     */
     #startTime
 
+    /**
+     * Represents the interval for the game timer.
+     *
+     * @type {number}
+     * @private
+     */
     #timerInterval
 
+    /**
+     * Represents the clock element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #clock
 
+    /**
+     * Represents the resize button element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #resizeButton
 
     /**

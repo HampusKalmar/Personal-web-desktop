@@ -32,9 +32,10 @@ template.innerHTML = `
 let highestZIndex = 1
 
 customElements.define('sub-window',
-/**
- *
- */
+
+  /**
+   * Custom element representing a sub-window.
+   */
   class extends HTMLElement {
     #mainWindow
 

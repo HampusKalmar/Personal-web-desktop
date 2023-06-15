@@ -74,11 +74,23 @@ template.innerHTML = `
 customElements.define('dock-application',
 
   /**
-   *
+   * Defines a custom element representing the dock.
    */
   class extends HTMLElement {
+    /**
+     * Represents the dock container element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #dock
 
+    /**
+     * Represents the dock item elements.
+     *
+     * @type {NodeList}
+     * @private
+     */
     #items
 
     /**

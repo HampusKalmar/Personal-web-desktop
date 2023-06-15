@@ -72,36 +72,117 @@ template.innerHTML = `
 `
 
 customElements.define('message-application',
+
   /**
-   *
+   * Custom element representing a message-application.
    */
   class extends HTMLElement {
+    /**
+     * Represents the message app element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #messageApp
 
+    /**
+     * Represents the message input element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #messageInput
 
+    /**
+     * Represents the message list element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #messageList
 
+    /**
+     * Represents the send button element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #sendButton
 
+    /**
+     * Represents the error message element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #errorMessage
 
+    /**
+     * Represents the username button element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #usernameButton
 
+    /**
+     * Represents the emoji button element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #emojiButton
 
+    /**
+     * Represents the emoji picker element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #emojiPicker
 
+    /**
+     * Represents the emojis collection.
+     *
+     * @type {NodeList}
+     * @private
+     */
     #emojis
 
+    /**
+     * Represents the username input element.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #usernameInput
 
+    /**
+     * Represents the API key for authentication.
+     *
+     * @type {*}
+     */
     socket
 
+    /**
+     * Represents the API key for authentication.
+     *
+     * @type {string}
+     */
     apiKey
 
+    /**
+     * Represents the username for the chat.
+     *
+     * @type {string}
+     */
     username
 
+    /**
+     * Represents the queue of messages to be sent.
+     *
+     * @type {Array}
+     */
     messageQueue = []
 
     /**
