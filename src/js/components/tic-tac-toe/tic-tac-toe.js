@@ -8,7 +8,7 @@ template.innerHTML = `
       display: grid;
       grid-template-columns: repeat(3, 1fr);¨
       grid-gap: 10px;
-      padding: 1px;
+      padding: 10px;
       width: 400px;
       height: 400px;
       justify-items: center;
@@ -18,13 +18,14 @@ template.innerHTML = `
     }
 
     #ticTacToe-board > div {
+      box-sizing: border-box;
       background-color: #2b2d42;
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2em;
+      font-size: 20px;
       user-select: none;
       margin-top: 20px;
       border: 3px solid #edf2f4;
@@ -36,7 +37,7 @@ template.innerHTML = `
       font-size: 20px;
       font-family: fantasy;
       color: #edf2f4;
-      margin-top: 12px;
+      margin-top: 9px;
     }
 
   </style>
@@ -71,6 +72,8 @@ customElements.define('tic-tac-toe',
      */
     #currentTurn
 
+    #gameOver
+
     /**
      * A constructor that instantiates the private members.
      */
@@ -80,6 +83,8 @@ customElements.define('tic-tac-toe',
         .appendChild(template.content.cloneNode(true))
       this.#board = this.shadowRoot.querySelector('#ticTacToe-board')
       this.#status = this.shadowRoot.querySelector('#status')
+
+      this.#gameOver = false
     }
 
     /**
@@ -96,6 +101,7 @@ customElements.define('tic-tac-toe',
       this.#board.innerHTML = ''
       this.#status.textContent = ''
       this.#currentTurn = 'x'
+      this.#gameOver = false
       for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div')
         cell.setAttribute('tabindex', '0')
@@ -115,19 +121,21 @@ customElements.define('tic-tac-toe',
      * @param {HTMLElement} cell - The clicked cell element.
      */
     handleCellClick (cell) {
-      if (cell.textContent === '') {
+      if (!this.#gameOver && cell.textContent === '') {
         cell.textContent = this.#currentTurn
         cell.classList.add(this.#currentTurn)
-      }
-      if (this.checkWin(this.#currentTurn)) {
-        this.#status.textContent = 'You Win😀 '
-        setTimeout(() => this.startGame(), 2000)
-      } else if (this.isDraw()) {
-        this.#status.textContent = 'Draw😑'
-        setTimeout(() => this.startGame(), 2000)
-      } else {
-        this.#currentTurn = 'o'
-        this.computerMove()
+        if (this.checkWin(this.#currentTurn)) {
+          this.#status.textContent = 'You Win😀 '
+          this.#gameOver = true
+          setTimeout(() => this.startGame(), 2000)
+        } else if (this.isDraw()) {
+          this.#status.textContent = 'Draw😑'
+          this.#gameOver = true
+          setTimeout(() => this.startGame(), 2000)
+        } else {
+          this.#currentTurn = 'o'
+          this.computerMove()
+        }
       }
     }
 
@@ -145,6 +153,7 @@ customElements.define('tic-tac-toe',
       cell.classList.add(this.#currentTurn)
       if (this.checkWin(this.#currentTurn)) {
         this.#status.textContent = 'You lose😔'
+        this.#gameOver = true
         setTimeout(() => this.startGame(), 2000)
       } else {
         this.#currentTurn = 'x'

@@ -5,8 +5,8 @@ You are playing against the computer, which is using the symbol 'o'.
 
 ## Usage 
 
-To try this application folow these steps:
+To try this application follow these steps:
 1. import the tic-tac-toe.js file with the correct path.
 2. Inside the body tag in the index.html module, add this: <tic-tac-toe>
 3. Start the application by running 'npm run dev' in the console.
-4. Go to the link and play the game.
+4. Go to the provided link and play the game.
