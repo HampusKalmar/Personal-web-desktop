@@ -29,7 +29,7 @@ template.innerHTML = `
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 140px;
+      height: 120px;
       background: #2b2d42;
     }
 

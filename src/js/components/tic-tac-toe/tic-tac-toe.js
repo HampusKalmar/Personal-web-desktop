@@ -82,7 +82,13 @@ customElements.define('tic-tac-toe',
       this.#currentTurn = 'x'
       for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div')
+        cell.setAttribute('tabindex', '0')
         cell.addEventListener('click', () => this.handleCellClick(cell))
+        cell.addEventListener('keyup', (event) => {
+          if (event.key === 'Enter') {
+            this.handleCellClick(cell)
+          }
+        })
         this.#board.appendChild(cell)
       }
     }

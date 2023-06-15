@@ -152,10 +152,6 @@ customElements.define('memory-game',
       this.#timerInterval = null
 
       this.#boardSize = { rows: 4, columns: 4 }
-
-      //
-      // SAKER KVAR ATT FIXA I DENNA MOUDUL:
-      // 1. få applikation att fungera med kyboardet enbart.
     }
 
     /**
@@ -204,7 +200,16 @@ customElements.define('memory-game',
         tileElement.dataset.image = EMOJIS[tile]
         tileElement.dataset.flipped = 'false'
         tileElement.dataset.matched = 'false'
+
+        tileElement.setAttribute('tabindex', '0')
+
         tileElement.addEventListener('click', this.flipTile.bind(this, tileElement))
+
+        tileElement.addEventListener('keyup', (event) => {
+          if (event.key === 'Enter') {
+            this.flipTile(tileElement)
+          }
+        })
         this.#memoryBoard.appendChild(tileElement)
       })
     }
