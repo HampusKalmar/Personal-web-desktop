@@ -61,9 +61,6 @@ customElements.define('tic-tac-toe',
         .appendChild(template.content.cloneNode(true))
       this.#board = this.shadowRoot.querySelector('#ticTacToe-board')
       this.#status = this.shadowRoot.querySelector('#status')
-
-      // SAKER KVAR ATT FIXA:
-      // Få applikationen att fungera med bara keyboard.
     }
 
     /**
@@ -137,6 +134,7 @@ customElements.define('tic-tac-toe',
 
     /**
      * Checks if the player has won the game.
+     * The different arrays representing all possible winning situations.
      *
      * @param {string} player - The player to check.
      * @returns {boolean} - True if the player has won, false if the computer won.

@@ -29,6 +29,7 @@ template.innerHTML = `
     }
   </style>
 `
+let highestZIndex = 1
 
 customElements.define('sub-window',
 /**
@@ -45,9 +46,6 @@ customElements.define('sub-window',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.#mainWindow = this.shadowRoot.querySelector('#window-container')
-
-      // SAKER ATT FIXA:
-      // Z-index är fel på, om jag "spammar" på ett fönster, så tar det så många gånger + 1 att få upp det andra fönstret bakom.
     }
 
     /**
@@ -104,14 +102,13 @@ customElements.define('sub-window',
       let isDragging = false
       let offsetX = 0
       let offsetY = 0
-      this.zIndex = 1
 
       popUpWindow.addEventListener('mousedown', (event) => {
         isDragging = true
         offsetX = event.clientX - popUpWindow.getBoundingClientRect().left
         offsetY = event.clientY - popUpWindow.getBoundingClientRect().top
-        this.zIndex += 1
-        popUpWindow.style.zIndex = this.zIndex
+        highestZIndex += 1
+        popUpWindow.style.zIndex = highestZIndex
       })
 
       popUpWindow.addEventListener('mousemove', (event) => {
