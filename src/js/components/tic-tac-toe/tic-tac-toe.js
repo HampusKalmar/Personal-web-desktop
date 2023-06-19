@@ -168,8 +168,7 @@ customElements.define('tic-tac-toe',
 
     /**
      * Checks if the player has won the game.
-     * The different arrays representing all possible winning situations.
-     *
+     * The different arrays representing all possible winning situations in the game.
      *
      * @param {string} player - The player to check.
      * @returns {boolean} - True if the player has won, false if the computer won.
