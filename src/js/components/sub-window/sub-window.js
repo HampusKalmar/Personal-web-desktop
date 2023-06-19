@@ -37,6 +37,12 @@ customElements.define('sub-window',
    * Custom element representing a sub-window.
    */
   class extends HTMLElement {
+    /**
+     * Represents the main window or container in the HTML shadow DOM.
+     *
+     * @type {HTMLElement}
+     * @private
+     */
     #mainWindow
 
     /**
