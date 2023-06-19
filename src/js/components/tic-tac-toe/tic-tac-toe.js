@@ -72,6 +72,12 @@ customElements.define('tic-tac-toe',
      */
     #currentTurn
 
+    /**
+     * Indicates whether the game is over or not.
+     *
+     * @type {boolean}
+     * @private
+     */
     #gameOver
 
     /**
@@ -163,6 +169,7 @@ customElements.define('tic-tac-toe',
     /**
      * Checks if the player has won the game.
      * The different arrays representing all possible winning situations.
+     *
      *
      * @param {string} player - The player to check.
      * @returns {boolean} - True if the player has won, false if the computer won.
