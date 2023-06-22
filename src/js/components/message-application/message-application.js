@@ -248,7 +248,11 @@ customElements.define('message-application',
       }
       if (this.socket.readyState === WebSocket.OPEN) {
         this.socket.send(JSON.stringify(message))
-        this.messageQueue.unshift(message)
+        // Gamla lösningen:
+        // this.messageQueue.unshift(message)
+
+        // Nya lösningen: istället för att visa meddelandet två gånger visas det nu bara en gång.
+        this.#messageInput.value = ''
         if (this.messageQueue.length > 20) {
           this.messageQueue.pop()
         }

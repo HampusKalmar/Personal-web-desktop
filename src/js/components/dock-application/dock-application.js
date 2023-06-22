@@ -138,6 +138,9 @@ customElements.define('dock-application',
           }
           document.body.appendChild(subWindow)
           subWindow.createPopUpWindow(appType)
+          // Ifall jag hade gjort dock-application oberoende av sub-window:
+          // Hade använt en mera event-driven arkitektur,
+          // Använt mig av CustomEvent och dispatchEvent()
         })
       })
     }

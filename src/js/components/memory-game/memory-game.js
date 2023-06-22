@@ -291,7 +291,25 @@ customElements.define('memory-game',
      * @param {HTMLElement} tileElement - The HTML element representing the tile to be flipped.
      */
     flipTile (tileElement) {
-      if (this.#gameOver || tileElement.dataset.matched === 'true' || this.#flippedTiles.length === 2) return
+      // MIN GAMLA LÖSNING:  if (this.#gameOver || tileElement.dataset.matched === 'true' || this.#flippedTiles.length === 2) return
+
+      // MIN NYA LÖSNING ÄR DESSA FYRA IF-SATSER:
+      if (this.#gameOver) {
+        return
+      }
+
+      if (tileElement.dataset.matched === 'true') {
+        return
+      }
+
+      // Kollar om ett kort har blivit "flipped" och hindrar användaren för att flippa samma kort igen.
+      if (this.#flippedTiles.length === 1 && this.#flippedTiles[0] === tileElement) {
+        return
+      }
+
+      if (this.#flippedTiles.length === 2) {
+        return
+      }
       tileElement.dataset.flipped = 'true'
       this.#flippedTiles.push(tileElement)
 
